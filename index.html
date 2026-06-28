@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>グミレポ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink:    #FF6BAE;
+      --yellow:  #FFD84D;
+      --lime:    #8EE000;
+      --sky:     #50CFFF;
+      --orange:  #FF8C42;
+      --purple:  #A66CFF;
+      --white:   #FFFFFF;
+      --ink:     #1A1020;
+      --ink-sub: #5C4B6B;
+      --bg:      #FFF6FB;
+      --card-r:  18px;
+      --border:  2.5px solid var(--ink);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans JP', 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--pink);
+      border-bottom: var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 26px;
+      color: var(--white);
+      letter-spacing: -0.5px;
+      text-shadow: 2px 2px 0 var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo-gummy {
+      font-size: 28px;
+    }
+
+    .btn-post {
+      background: var(--yellow);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 14px;
+      border: var(--border);
+      border-radius: 100px;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 3px 3px 0 var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-post:hover  { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+    .btn-post:active { transform: translate(1px, 1px);   box-shadow: 2px 2px 0 var(--ink); }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--yellow);
+      border-bottom: var(--border);
+      padding: 32px 24px 28px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(28px, 6vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      color: var(--ink);
+    }
+
+    .hero-title span {
+      color: var(--pink);
+      text-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .hero-sub {
+      margin-top: 8px;
+      font-size: 15px;
+      color: var(--ink-sub);
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .feed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .feed-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    .count-badge {
+      background: var(--sky);
+      border: var(--border);
+      border-radius: 100px;
+      padding: 3px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ── Cards grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--white);
+      border: var(--border);
+      border-radius: var(--card-r);
+      overflow: hidden;
+      box-shadow: 4px 4px 0 var(--ink);
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      background: #f0e8f5;
+    }
+
+    .card-img-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+    }
+
+    .card-body {
+      padding: 14px 16px 16px;
+    }
+
+    .card-name {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .ratings {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rating-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .rating-label {
+      font-size: 10px;
+      color: var(--ink-sub);
+      font-weight: 700;
+    }
+
+    .rating-dots {
+      display: flex;
+      gap: 3px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid var(--ink);
+    }
+
+    .dot.filled-aji   { background: var(--orange); }
+    .dot.filled-danryoku { background: var(--lime); }
+    .dot.empty        { background: var(--white); }
+
+    .card-comment {
+      font-size: 13px;
+      color: var(--ink-sub);
+      line-height: 1.5;
+      border-top: 1.5px dashed #ddd;
+      padding-top: 10px;
+      margin-top: 2px;
+    }
+
+    .card-date {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 8px;
+      text-align: right;
+    }
+
+    /* ── Color accents per card ── */
+    .accent-pink    { border-top: 5px solid var(--pink); }
+    .accent-sky     { border-top: 5px solid var(--sky); }
+    .accent-lime    { border-top: 5px solid var(--lime); }
+    .accent-orange  { border-top: 5px solid var(--orange); }
+    .accent-purple  { border-top: 5px solid var(--purple); }
+
+    /* ── Empty state ── */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--ink-sub);
+    }
+
+    .empty-icon { font-size: 64px; margin-bottom: 12px; }
+    .empty-text { font-size: 16px; font-weight: 700; }
+    .empty-sub  { font-size: 14px; margin-top: 6px; }
+
+    /* ── Modal backdrop ── */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,16,32,0.55);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-bg.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border: var(--border);
+      border-radius: 24px;
+      box-shadow: 6px 6px 0 var(--ink);
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px 28px 24px;
+    }
+
+    .modal-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink-sub);
+      margin-bottom: 6px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--ink);
+      outline: none;
+      transition: box-shadow 0.15s;
+    }
+
+    .form-input:focus { box-shadow: 3px 3px 0 var(--pink); }
+
+    textarea.form-input { resize: vertical; min-height: 80px; }
+
+    /* ── Image upload area ── */
+    .img-upload {
+      border: 2.5px dashed var(--pink);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      background: #fff0f8;
+      transition: background 0.15s;
+    }
+
+    .img-upload:hover { background: #ffe0f0; }
+    .img-upload-icon  { font-size: 32px; margin-bottom: 6px; }
+    .img-upload-text  { font-size: 13px; color: var(--ink-sub); }
+
+    #img-preview {
+      margin-top: 10px;
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 10px;
+      border: var(--border);
+      display: none;
+    }
+
+    /* ── Star / dot rating UI ── */
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rating-row label { font-size: 13px; font-weight: 700; min-width: 48px; }
+
+    .dot-selector {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot-selector input { display: none; }
+
+    .dot-selector .ds-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--ink);
+      cursor: pointer;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.1s, transform 0.1s;
+    }
+
+    .dot-selector .ds-dot:hover { transform: scale(1.2); }
+
+    /* JS fills these via .selected class */
+    .dot-aji     .ds-dot.selected { background: var(--orange); }
+    .dot-danryoku .ds-dot.selected { background: var(--lime); }
+
+    /* ── Buttons row ── */
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 11px;
+      border: var(--border);
+      border-radius: 100px;
+      background: var(--white);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 3px 3px 0 var(--ink);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .btn-cancel:hover  { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
+    .btn-cancel:active { transform: translate(1px,1px);   box-shadow: 2px 2px 0 var(--ink); }
+
+    .btn-submit {
+      flex: 2;
+      padding: 11px;
+      border: var(--border);
+      border-radius: 100px;
+      background: var(--pink);
+      color: var(--white);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 3px 3px 0 var(--ink);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .btn-submit:hover  { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
+    .btn-submit:active { transform: translate(1px,1px);   box-shadow: 2px 2px 0 var(--ink); }
+
+    /* ── Delete button on card ── */
+    .btn-delete {
+      float: right;
+      background: none;
+      border: 1.5px solid #eee;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .btn-delete:hover { border-color: #f55; color: #f55; }
+
+    @media (max-width: 480px) {
+      .modal { padding: 20px 16px 18px; }
+      .hero-title { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-gummy">🍬</span>グミレポ
+  </div>
+  <button class="btn-post" onclick="openModal()">
+    ＋ レポを書く
+  </button>
+</header>
+
+<div class="hero">
+  <h1 class="hero-title">グミを<span>語ろう</span>、記録しよう。</h1>
+  <p class="hero-sub">食べたグミを写真・評価・感想で残す、あなただけのグミ記録帳</p>
+</div>
+
+<main>
+  <div class="feed-header">
+    <span class="feed-title">みんなのレポ</span>
+    <span class="count-badge" id="count-badge">0件</span>
+  </div>
+
+  <div class="grid" id="feed">
+    <div class="empty" id="empty-state">
+      <div class="empty-icon">🍬</div>
+      <div class="empty-text">まだレポがありません</div>
+      <div class="empty-sub">最初のグミレポを書いてみよう！</div>
+    </div>
+  </div>
+</main>
+
+<!-- ── Post Modal ── -->
+<div class="modal-bg" id="modal-bg" onclick="closeModalOnBg(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+    <div class="modal-title">
+      <span>🍬</span>
+      <span id="modal-heading">グミレポを書く</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="gumi-name">グミの名前 *</label>
+      <input class="form-input" type="text" id="gumi-name" placeholder="例：コーラアップ" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">写真</label>
+      <div class="img-upload" onclick="document.getElementById('img-file').click()">
+        <div class="img-upload-icon">📷</div>
+        <div class="img-upload-text">タップして写真を追加</div>
+        <input type="file" id="img-file" accept="image/*" style="display:none" onchange="previewImg(event)" />
+      </div>
+      <img id="img-preview" alt="プレビュー" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">味の評価</label>
+      <div class="rating-row dot-aji" id="aji-selector">
+        <label>味</label>
+        <div class="dot-selector">
+          <span class="ds-dot" data-val="1" onclick="setRating('aji',1)"></span>
+          <span class="ds-dot" data-val="2" onclick="setRating('aji',2)"></span>
+          <span class="ds-dot" data-val="3" onclick="setRating('aji',3)"></span>
+          <span class="ds-dot" data-val="4" onclick="setRating('aji',4)"></span>
+          <span class="ds-dot" data-val="5" onclick="setRating('aji',5)"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">弾力の評価</label>
+      <div class="rating-row dot-danryoku" id="danryoku-selector">
+        <label>弾力</label>
+        <div class="dot-selector">
+          <span class="ds-dot" data-val="1" onclick="setRating('danryoku',1)"></span>
+          <span class="ds-dot" data-val="2" onclick="setRating('danryoku',2)"></span>
+          <span class="ds-dot" data-val="3" onclick="setRating('danryoku',3)"></span>
+          <span class="ds-dot" data-val="4" onclick="setRating('danryoku',4)"></span>
+          <span class="ds-dot" data-val="5" onclick="setRating('danryoku',5)"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="gumi-comment">感想</label>
+      <textarea class="form-input" id="gumi-comment" placeholder="食感・味・見た目など、思ったことを自由に！"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">キャンセル</button>
+      <button class="btn-submit" onclick="submitPost()">レポを投稿</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'gumirepo_posts_v1';
+  const ACCENTS = ['accent-pink','accent-sky','accent-lime','accent-orange','accent-purple'];
+  const CARD_BG  = ['#FFF0F8','#F0FAFF','#F5FDE0','#FFF4EC','#F5F0FF'];
+  const PLACEHOLDERS = ['🍊','🍋','🍇','🍒','🍓','🫐','🍉','🍑','🍈'];
+
+  let posts = [];
+  let ratings = { aji: 0, danryoku: 0 };
+  let imgData = null;
+
+  function loadPosts() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      posts = raw ? JSON.parse(raw) : [];
+    } catch(e) { posts = []; }
+  }
+
+  function savePosts() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(posts)); } catch(e) {}
+  }
+
+  function renderFeed() {
+    const feed = document.getElementById('feed');
+    const empty = document.getElementById('empty-state');
+    const badge = document.getElementById('count-badge');
+    badge.textContent = posts.length + '件';
+
+    if (posts.length === 0) {
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    feed.innerHTML = '';
+    [...posts].reverse().forEach((p, i) => {
+      const ai = p.accentIndex % ACCENTS.length;
+      const card = document.createElement('div');
+      card.className = 'card ' + ACCENTS[ai];
+      card.style.background = CARD_BG[ai];
+
+      const imgHtml = p.img
+        ? `<img class="card-img" src="${p.img}" alt="${p.name}" />`
+        : `<div class="card-img-placeholder" style="background:${CARD_BG[ai]}">${PLACEHOLDERS[p.id % PLACEHOLDERS.length]}</div>`;
+
+      const dotsAji = renderDots(p.aji, 'aji');
+      const dotsDan = renderDots(p.danryoku, 'danryoku');
+      const commentHtml = p.comment
+        ? `<div class="card-comment">${escHtml(p.comment)}</div>` : '';
+
+      card.innerHTML = `
+        ${imgHtml}
+        <div class="card-body">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px">
+            <div class="card-name">${escHtml(p.name)}</div>
+            <button class="btn-delete" onclick="deletePost(${p.id})" title="削除">✕</button>
+          </div>
+          <div class="ratings">
+            <div class="rating-item">
+              <span class="rating-label">味</span>
+              <div class="rating-dots">${dotsAji}</div>
+            </div>
+            <div class="rating-item">
+              <span class="rating-label">弾力</span>
+              <div class="rating-dots">${dotsDan}</div>
+            </div>
+          </div>
+          ${commentHtml}
+          <div class="card-date">${p.date}</div>
+        </div>`;
+      feed.appendChild(card);
+    });
+  }
+
+  function renderDots(val, type) {
+    let html = '';
+    for (let i = 1; i <= 5; i++) {
+      const cls = i <= val ? 'dot filled-' + (type === 'aji' ? 'aji' : 'danryoku') : 'dot empty';
+      html += `<div class="${cls}"></div>`;
+    }
+    return html;
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function openModal() {
+    ratings = { aji: 0, danryoku: 0 };
+    imgData = null;
+    document.getElementById('gumi-name').value = '';
+    document.getElementById('gumi-comment').value = '';
+    document.getElementById('img-file').value = '';
+    document.getElementById('img-preview').style.display = 'none';
+    updateDotUI('aji');
+    updateDotUI('danryoku');
+    document.getElementById('modal-bg').classList.add('open');
+    document.getElementById('gumi-name').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('modal-bg').classList.remove('open');
+  }
+
+  function closeModalOnBg(e) {
+    if (e.target === document.getElementById('modal-bg')) closeModal();
+  }
+
+  function setRating(type, val) {
+    ratings[type] = val;
+    updateDotUI(type);
+  }
+
+  function updateDotUI(type) {
+    const id = type === 'aji' ? 'aji-selector' : 'danryoku-selector';
+    const dots = document.querySelectorAll('#' + id + ' .ds-dot');
+    dots.forEach((d, i) => {
+      d.classList.toggle('selected', i < ratings[type]);
+    });
+  }
+
+  function previewImg(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      imgData = ev.target.result;
+      const prev = document.getElementById('img-preview');
+      prev.src = imgData;
+      prev.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function submitPost() {
+    const name = document.getElementById('gumi-name').value.trim();
+    if (!name) {
+      document.getElementById('gumi-name').focus();
+      document.getElementById('gumi-name').style.boxShadow = '3px 3px 0 #f55';
+      setTimeout(() => document.getElementById('gumi-name').style.boxShadow = '', 1200);
+      return;
+    }
+    const now = new Date();
+    const date = now.getFullYear() + '/' + String(now.getMonth()+1).padStart(2,'0') + '/' + String(now.getDate()).padStart(2,'0');
+    const id = Date.now();
+    posts.push({
+      id,
+      name,
+      aji: ratings.aji,
+      danryoku: ratings.danryoku,
+      comment: document.getElementById('gumi-comment').value.trim(),
+      img: imgData,
+      date,
+      accentIndex: posts.length
+    });
+    savePosts();
+    renderFeed();
+    closeModal();
+  }
+
+  function deletePost(id) {
+    if (!confirm('このレポを削除しますか？')) return;
+    posts = posts.filter(p => p.id !== id);
+    savePosts();
+    renderFeed();
+  }
+
+  loadPosts();
+  renderFeed();
+</script>
+</body>
+</html>
